@@ -42,7 +42,7 @@ class logicWindow(QMainWindow, Ui_mainWindow):
         self.btn_folder.clicked.connect(self.chooseDirectory)
         self.btn_p1_next.clicked.connect(self.checkInput)
         self.btn_p2_cancel.clicked.connect(self.pageBack)
-        self.btn_p2_create.clicked.connect(self.createFolders)
+        self.btn_p2_create.clicked.connect(self.folderCreationLogic)
 
 
 
@@ -50,6 +50,12 @@ class logicWindow(QMainWindow, Ui_mainWindow):
         file = str(QFileDialog.getExistingDirectory(self, "Select Directory"))
         self.lineEdit_folder.setText(file)
 
+
+    def emptyErrorLabels(self):
+        self.label_err_folder.setText("")
+        self.label_err_year.setText("")
+        self.label_err_number.setText("")
+        self.label_err_name.setText("")
 
 
     def checkYear(self) -> bool:
@@ -80,13 +86,18 @@ class logicWindow(QMainWindow, Ui_mainWindow):
             return False
 
     def checkFolder(self):
-        return self.lineEdit_folder.text() != ''
+        if self.lineEdit_folder.text() != '':
+            return True
+        else:
+            self.label_err_folder.setText("Invalid Input!")
+            self.label_err_folder.setStyleSheet('color:red')
 
     def checkInput(self):
-
+        self.emptyErrorLabels()
         if self.checkYear() and self.checkNr() and self.checkName() and self.checkFolder():
             print("Yes sir")
             self.stackedWidget.setCurrentIndex(1)
+            self.emptyErrorLabels()
             self.createTree(self.lineEdit_folder.text())
 
         else:
@@ -137,10 +148,67 @@ class logicWindow(QMainWindow, Ui_mainWindow):
             item = root.child(i)
             print(f'Text: {item.text(0)} Checked: {item.checkState(0)}')
 
+    #TODO: PLEASE REFACTOR ME
+    def folderCreationLogic(self):
+        #first lets check if the project folder exists
+        if os.path.isdir(self.createPath()):
+            print("Folder exists")
+            #handle the usecase, when the folder already exists else:
+            qm = QMessageBox(self)
+            ret = qm.question(self, "Folder exists already!", "Do you want to overwrite the existing folder?", qm.StandardButton.Yes | qm.StandardButton.No)
+            print(ret.value)
+            #if the project folder already exists ask the user what he wants to do
+            if QMessageBox.StandardButton.Yes == ret:
+                #handle the yes case
+                #??delete the existing folders and create it new ??
+                shutil.rmtree(self.createPath())
+                self.createFolders()
+                print("clicked yes")
+            else:
+                #handle the no case
+                #?? go back to page one??
+                self.stackedWidget.setCurrentIndex(0)
+                print("something else")
+        elif os.path.isfile(self.createPath()):
+            print("File")
+            qm = QMessageBox(self)
+            ret = qm.question(self, "File with same name as Project folder exists already!", "Do you want to overwrite the existing file?",
+                              qm.StandardButton.Yes | qm.StandardButton.No)
+
+            print(ret.value)
+            # if a file with the same name already exists ask the user what he wants to do
+            if QMessageBox.StandardButton.Yes == ret:
+                # handle the yes case
+                # ??delete the existing file and create the folder instead??
+                os.remove(self.createPath())
+                self.createFolders()
+                print("clicked yes")
+            else:
+                # handle the no case
+                # ?? go back to page one??
+                self.stackedWidget.setCurrentIndex(0)
+                print("something else")
+
+        else:
+            print("Folder doesnt exist")
+            self.createFolders()
+            qm = QMessageBox(self)
+            qm.setWindowTitle("Folders created!")
+            qm.setText("Folders were successfully created! ")
+            qm.show()
+
+
+
+    def checkFolderExists(self, folder :str) -> bool:
+        dst = self.createPath()
+        return os.path.isdir(dst)
+
+
     def createFolders(self):
         root = self.treeWidget.invisibleRootItem()
         child_count = root.childCount()
         path = self.createPath()
+        os.makedirs(path)
         for i in range(child_count):
             item = root.child(i)
             print(f'Text: {item.text(0)} Checked: {item.checkState(0)}')
@@ -152,6 +220,7 @@ class logicWindow(QMainWindow, Ui_mainWindow):
                     os.makedirs(crt)
                     shutil.copytree(src, os.path.join(path, item.text(0)), dirs_exist_ok=True)
                 else:
+                    print("daquq")
                     shutil.copy2(src, path)
 
     def createPath(self):
