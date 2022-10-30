@@ -8,28 +8,29 @@ from startWin import Ui_mainWindow
 
 import os
 import shutil
+import toml
 
 
 ###########################################################
 #TESTAREA
-YEAR = "2022"
-PROJNR = "1337"
-PROJNAME = "Test"
+# YEAR = "2022"
+# PROJNR = "1337"
+# PROJNAME = "Test"
 
-srcdir = r'D:\structFolder'
-target = r'D:\structTest'
-proj = PROJNR + '_' + PROJNAME
+#srcdir = r'D:\structFolder'
+#target = r'D:\structTest'
+#proj = PROJNR + '_' + PROJNAME
 
 
 
-targetAdd = os.path.join(target, YEAR)
-projpath = os.path.join(PROJNR, PROJNAME)
-targetAdd = os.path.join(targetAdd, projpath)
+#targetAdd = os.path.join(target, YEAR)
+#projpath = os.path.join(PROJNR, PROJNAME)
+#targetAdd = os.path.join(targetAdd, projpath)
 
-print(targetAdd)
+#print(targetAdd)
 
 #shutil.copytree(srcdir, targetAdd)
-print('Finished execution')
+#print('Finished execution')
 
 ########################################
 
@@ -40,15 +41,48 @@ class logicWindow(QMainWindow, Ui_mainWindow):
         self.lineEdit_year.setText(str(date.today().year))
         self.show()
         self.btn_folder.clicked.connect(self.chooseDirectory)
+        self.btn_folder_target.clicked.connect(self.chooseDirectoryTarget)
         self.btn_p1_next.clicked.connect(self.checkInput)
         self.btn_p2_cancel.clicked.connect(self.pageBack)
-        self.btn_p2_create.clicked.connect(self.folderCreationLogic)
+        self.btn_p2_create.clicked.connect(self.checkTargetFolder)
+        self.path = self.getConfig()
+        self.setupEdit()
 
+    def getConfig(self):
+        path = {'src': '', 'trg': ''}
+        error = False
+        try:
+            with open('config.toml', 'r') as f:
+                ret_toml = toml.load(f)
+                if os.path.isdir(ret_toml['path']['source']):
+                    path['src'] = ret_toml['path']['source']
+                else:
+                    path['src'] = ''
+                if os.path.isdir(ret_toml['path']['target']):
+                    path['trg'] = ret_toml['path']['target']
+                else:
+                    path['trg'] = ''
+            print("success reading toml")
+            print(f'src {path["src"]} trg {path["trg"]}')
 
+            return path
+        except:
+            print("Error while reading the TOML config file")
+            QMessageBox.about(self, "Error with Config", "The Config file does not exist or the Data is invalid!")
+            return path
+
+    def setupEdit(self):
+        self.lineEdit_folder.setText(self.path['src'])
+        self.lineEdit_folder_target.setText(self.path['trg'])
 
     def chooseDirectory(self):
         file = str(QFileDialog.getExistingDirectory(self, "Select Directory"))
         self.lineEdit_folder.setText(file)
+
+    def chooseDirectoryTarget(self):
+        file = str(QFileDialog.getExistingDirectory(self, "Select Directory"))
+        self.lineEdit_folder_target.setText(file)
+
 
 
     def emptyErrorLabels(self):
@@ -133,7 +167,6 @@ class logicWindow(QMainWindow, Ui_mainWindow):
     #use this function to create just one layer of items
     def createTree(self, folder : str):
         self.treeWidget.clear()
-        # self.treeWidget.setHeader(0, "Strukturauswahl")
         ele = os.listdir(folder)
         for dr in ele:
             parent = QTreeWidgetItem(self.treeWidget)
@@ -147,6 +180,14 @@ class logicWindow(QMainWindow, Ui_mainWindow):
         for i in range(child_count):
             item = root.child(i)
             print(f'Text: {item.text(0)} Checked: {item.checkState(0)}')
+
+    def checkTargetFolder(self):
+        if self.lineEdit_folder_target.text() != '' or os.path.isdir(self.lineEdit_folder_target.text()):
+            self.folderCreationLogic()
+        else:
+            QMessageBox.about(self, "Invalid Input", "The target folder is invalid!")
+
+
 
     #TODO: PLEASE REFACTOR ME
     def folderCreationLogic(self):
@@ -213,19 +254,17 @@ class logicWindow(QMainWindow, Ui_mainWindow):
             item = root.child(i)
             print(f'Text: {item.text(0)} Checked: {item.checkState(0)}')
             if(item.checkState(0) == Qt.CheckState.Checked):
-                print("testprint")
                 src = os.path.join(self.lineEdit_folder.text(), item.text(0))
                 if(os.path.isdir(src)):
                     crt = os.path.join(path, item.text(0))
                     os.makedirs(crt)
                     shutil.copytree(src, os.path.join(path, item.text(0)), dirs_exist_ok=True)
                 else:
-                    print("daquq")
                     shutil.copy2(src, path)
 
     def createPath(self):
         ending = f'{self.lineEdit_number.text()}_{self.lineEdit_name.text()}'
-        fin = os.path.join(target, self.lineEdit_year.text(), ending)
+        fin = os.path.join(self.lineEdit_folder_target.text(), self.lineEdit_year.text(), ending)
         return fin
 
 if __name__ == '__main__':
