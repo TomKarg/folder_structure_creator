@@ -53,6 +53,9 @@
            <property name="text">
             <string>Auswählen</string>
            </property>
+           <property name="autoDefault">
+            <bool>true</bool>
+           </property>
           </widget>
          </item>
          <item row="5" column="0" colspan="2">
@@ -265,6 +268,12 @@
         <property name="text">
          <string>Übernehmen</string>
         </property>
+        <property name="autoDefault">
+         <bool>true</bool>
+        </property>
+        <property name="default">
+         <bool>false</bool>
+        </property>
        </widget>
       </widget>
       <widget class="QWidget" name="page_4">
@@ -280,6 +289,9 @@
         <property name="text">
          <string>Erstellen</string>
         </property>
+        <property name="autoDefault">
+         <bool>true</bool>
+        </property>
        </widget>
        <widget class="QPushButton" name="btn_p2_cancel">
         <property name="geometry">
@@ -292,6 +304,9 @@
         </property>
         <property name="text">
          <string>Abbrechen</string>
+        </property>
+        <property name="autoDefault">
+         <bool>true</bool>
         </property>
        </widget>
        <widget class="QWidget" name="">
@@ -356,6 +371,9 @@
                <property name="text">
                 <string>Auswählen</string>
                </property>
+               <property name="autoDefault">
+                <bool>true</bool>
+               </property>
               </widget>
              </item>
             </layout>
@@ -390,6 +408,19 @@
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
+ <tabstops>
+  <tabstop>lineEdit_folder</tabstop>
+  <tabstop>btn_folder</tabstop>
+  <tabstop>lineEdit_year</tabstop>
+  <tabstop>lineEdit_number</tabstop>
+  <tabstop>lineEdit_name</tabstop>
+  <tabstop>btn_p1_next</tabstop>
+  <tabstop>lineEdit_folder_target</tabstop>
+  <tabstop>btn_folder_target</tabstop>
+  <tabstop>treeWidget</tabstop>
+  <tabstop>btn_p2_create</tabstop>
+  <tabstop>btn_p2_cancel</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>
