@@ -10,28 +10,6 @@ import os
 import shutil
 import toml
 
-
-###########################################################
-#TESTAREA
-# YEAR = "2022"
-# PROJNR = "1337"
-# PROJNAME = "Test"
-
-#srcdir = r'D:\structFolder'
-#target = r'D:\structTest'
-#proj = PROJNR + '_' + PROJNAME
-
-
-
-#targetAdd = os.path.join(target, YEAR)
-#projpath = os.path.join(PROJNR, PROJNAME)
-#targetAdd = os.path.join(targetAdd, projpath)
-
-#print(targetAdd)
-
-#shutil.copytree(srcdir, targetAdd)
-#print('Finished execution')
-
 ########################################
 
 class logicWindow(QMainWindow, Ui_mainWindow):
@@ -82,7 +60,6 @@ class logicWindow(QMainWindow, Ui_mainWindow):
     def chooseDirectoryTarget(self):
         file = str(QFileDialog.getExistingDirectory(self, "Select Directory"))
         self.lineEdit_folder_target.setText(file)
-
 
 
     def emptyErrorLabels(self):
@@ -153,16 +130,13 @@ class logicWindow(QMainWindow, Ui_mainWindow):
             parent = QTreeWidgetItem(self.treeWidget)
             parent.setFlags(parent.flags() |Qt.ItemFlag.ItemIsAutoTristate | Qt.ItemFlag.ItemIsUserCheckable)
             parent.setText(0, f'{dr}')
-            #parent.setCheckState(0, Qt.CheckState.Unchecked)
-            #parent.setFlags(parent.flags() | Qt.ItemFlag.ItemIsTristate | Qt.ItemIsUserCheckable)
-            #parent.setFlags(parent.flags() | Qt.ItemFlag.ItemIsUserTristate | Qt.ItemFlag.ItemIsUserCheckable)
 
             fold = os.path.join(folder, dr)
             for dp in os.listdir(fold):
                 child = QTreeWidgetItem(parent)
                 child.setFlags(child.flags() | Qt.ItemFlag.ItemIsUserCheckable)
                 child.setText(0, f'{dp}')
-                child.setCheckState(0, Qt.CheckState.Unchecked)
+                child.setCheckState(0, Qt.CheckState.Checked)
 
     #use this function to create just one layer of items
     def createTree(self, folder : str):
@@ -172,7 +146,7 @@ class logicWindow(QMainWindow, Ui_mainWindow):
             parent = QTreeWidgetItem(self.treeWidget)
             parent.setFlags(parent.flags() | Qt.ItemFlag.ItemIsUserCheckable)
             parent.setText(0, f'{dr}')
-            parent.setCheckState(0, Qt.CheckState.Unchecked)
+            parent.setCheckState(0, Qt.CheckState.Checked)
 
     def printChecked(self):
         root = self.treeWidget.invisibleRootItem()
@@ -186,7 +160,6 @@ class logicWindow(QMainWindow, Ui_mainWindow):
             self.folderCreationLogic()
         else:
             QMessageBox.about(self, "Invalid Input", "The target folder is invalid!")
-
 
 
     #TODO: PLEASE REFACTOR ME
@@ -238,11 +211,9 @@ class logicWindow(QMainWindow, Ui_mainWindow):
             qm.setText("Folders were successfully created! ")
             qm.show()
 
-
-
-    def checkFolderExists(self, folder :str) -> bool:
-        dst = self.createPath()
-        return os.path.isdir(dst)
+    # def checkFolderExists(self, folder :str) -> bool:
+    #     dst = self.createPath()
+    #     return os.path.isdir(dst)
 
 
     def createFolders(self):
