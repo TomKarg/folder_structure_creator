@@ -341,7 +341,7 @@
            <item>
             <layout class="QHBoxLayout" name="horizontalLayout_4">
              <item>
-              <widget class="QLabel" name="label">
+              <widget class="QLabel" name="label_target">
                <property name="text">
                 <string>Zielordner</string>
                </property>
