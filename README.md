@@ -28,7 +28,7 @@ By Pressing the "Create" Button the new folder structure will be created.
 
 The Target location will be the following.
 
-(Targetfolder path)/(Year)/(projectnumber_projectname)/
+### (Targetfolder path)/(Year)/(projectnumber_projectname)/
 
 If this exact location already exists the User will be asked, if he wants to add the missing folders/files.
 
