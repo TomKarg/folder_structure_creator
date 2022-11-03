@@ -15,6 +15,7 @@ class logicWindow(QMainWindow, Ui_mainWindow):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
+        self.GER = True
         self.lineEdit_year.setText(str(date.today().year))
         self.btn_folder.clicked.connect(self.chooseDirectory)
         self.btn_folder_target.clicked.connect(self.chooseDirectoryTarget)
@@ -54,16 +55,13 @@ class logicWindow(QMainWindow, Ui_mainWindow):
                     path['logo'] = ret_toml['picture']['logo']
                 if os.path.isfile(ret_toml['picture']['background']) and self.isPicture(ret_toml['picture']['background']):
                     path['bgd'] = ret_toml['picture']['background']
-                #error here if GER doesnt exist in the config file
-                if ret_toml['language']['GER'] != None and ret_toml['language']['GER'] == "False":
+                #if ret_toml['language']['GER'] != None and ret_toml['language']['GER'] == "False":
+                if ret_toml['language']['GER'] == False:
                     path['GER'] = False
 
-            print("success reading toml")
-            print(f'src {path["src"]} trg {path["trg"]}')
-
             return path
+
         except:
-            #print("Error while reading the TOML config file")
             if self.GER:
                 QMessageBox.about(self, "Fehlerhafe Konfigurationsdatei", "Die config.toml datei ist entweder fehlerhaft oder existiert nicht!")
             else:
@@ -262,8 +260,6 @@ class logicWindow(QMainWindow, Ui_mainWindow):
             #if the project folder already exists ask the user what he wants to do
             if QMessageBox.StandardButton.Yes == ret:
                 #handle the yes case
-                #??delete the existing folders and create it new ??
-                #shutil.rmtree(self.createPath())
                 self.createFolders()
                 print("clicked yes")
             else:
@@ -281,13 +277,11 @@ class logicWindow(QMainWindow, Ui_mainWindow):
             # if a file with the same name already exists ask the user what he wants to do
             if QMessageBox.StandardButton.Yes == ret:
                 # handle the yes case
-                # ??delete the existing file and create the folder instead??
                 os.remove(self.createPath())
                 self.createFolders()
                 print("clicked yes")
             else:
                 # handle the no case
-                # ?? go back to page one??
                 self.stackedWidget.setCurrentIndex(0)
                 print("something else")
 
