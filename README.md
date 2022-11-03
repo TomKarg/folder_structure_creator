@@ -28,10 +28,11 @@ By Pressing the "Create" Button the new folder structure will be created.
 
 The Target location will be the following.
 
-(Targetfolder path)/(Year)/(projectnumber_projectname)/
+### (Targetfolder path)/(Year)/(projectnumber_projectname)/
+
 If this exact location already exists the User will be asked, if he wants to add the missing folders/files.
 
-#### Yes we want to add the missing folders/files
+#### User Input: Yes we want to add the missing folders/files
 The User clicked the "Yes" Button. Now the Program will check which folders were selected by the User.
 If any of the selected folders dont exist in the Target, then they will be created.
 If they already exist, the Program checks inside of the folders if any files/folders are missing and adds them.
@@ -39,7 +40,7 @@ If they already exist, the Program checks inside of the folders if any files/fol
 ##### Existing files will not be updated!
 ##### Nothing will be deleted in this Process
 
-####No we dont want to add the missing folders/files
+#### User Input: No we dont want to add the missing folders/files
 The User clicked the "No" Button. The Program will go back to the first Page, so the User can change the Input if the wishes. 
 
 
