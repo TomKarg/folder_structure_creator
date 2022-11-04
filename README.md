@@ -49,16 +49,19 @@ The config file is used to prefil the Program with Information.
 
 ### Sourcepath
 The Path of the folder which should be used as baseline for the folder structure
+This path will prefill the Source path on page 1.
 
 ### Targetpath
-The Path to which the copy operation shoul
+The basepath to which the copy operation should be executed to.
+This path will prefill the Target path on page 2.
 
-## Logo
-Link to the Logo. The logo will be used on the Mainpage and on the Windowicon.
+### Logo
+Link to the Logo. The logo will be used on the Mainpage and as Windowicon.
 
-## Language GER
+### Language GER
 Setting to change between English and German language
-
+false -> Language is set to English
+true -> Language is set to German
 
 ## Motivation 
 In the past i had to work with similar tools which were implemented in VBA.
