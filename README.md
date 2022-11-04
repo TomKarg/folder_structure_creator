@@ -60,7 +60,9 @@ Link to the Logo. The logo will be used on the Mainpage and as Windowicon.
 
 ### Language GER
 Setting to change between English and German language
+
 false -> Language is set to English
+
 true -> Language is set to German
 
 ## Motivation 
