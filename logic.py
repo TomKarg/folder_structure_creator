@@ -3,7 +3,7 @@ import sys
 from datetime import date
 from PyQt6.QtCore import *
 from PyQt6.QtWidgets import QMainWindow, QApplication, QFileDialog, QMessageBox, QTreeWidgetItem
-from PyQt6.QtGui import QIcon
+from PyQt6.QtGui import QIcon, QPixmap
 from startWin import Ui_mainWindow
 import os
 import shutil
@@ -28,6 +28,7 @@ class logicWindow(QMainWindow, Ui_mainWindow):
         self.GER = self.path['GER']
         if not self.GER:
             self.setLanguageEng()
+        self.createLogo()
         self.show()
         self.setupEdit()
 
@@ -66,7 +67,6 @@ class logicWindow(QMainWindow, Ui_mainWindow):
                 QMessageBox.about(self, "Fehlerhafe Konfigurationsdatei", "Die config.toml datei ist entweder fehlerhaft oder existiert nicht!")
             else:
                 QMessageBox.about(self, "Invalid Configuration file", "The config.toml file is either invalid or does not exist!")
-            print(f'path {path}')
             return path
 
     def setLanguageEng(self):
@@ -114,6 +114,12 @@ class logicWindow(QMainWindow, Ui_mainWindow):
         #     }
         # '''
         # self.setStyleSheet(stylesheet)
+
+    def createLogo(self):
+        pixmap = QPixmap(self.path['logo'])
+        pixmap = pixmap.scaled(400, 200)
+        self.label_picture.setPixmap(pixmap)
+
 
     def setupEdit(self):
         self.lineEdit_folder.setText(self.path['src'])
@@ -185,7 +191,6 @@ class logicWindow(QMainWindow, Ui_mainWindow):
     def checkInput(self):
         self.emptyErrorLabels()
         if self.checkYear() and self.checkNr() and self.checkName() and self.checkFolder():
-            print("Yes sir")
             self.stackedWidget.setCurrentIndex(1)
             self.emptyErrorLabels()
             self.createTree(self.lineEdit_folder.text())
@@ -233,7 +238,7 @@ class logicWindow(QMainWindow, Ui_mainWindow):
         child_count = root.childCount()
         for i in range(child_count):
             item = root.child(i)
-            print(f'Text: {item.text(0)} Checked: {item.checkState(0)}')
+            #print(f'Text: {item.text(0)} Checked: {item.checkState(0)}')
 
     def checkTargetFolder(self):
         if self.lineEdit_folder_target.text() != '' or os.path.isdir(self.lineEdit_folder_target.text()):
@@ -248,7 +253,6 @@ class logicWindow(QMainWindow, Ui_mainWindow):
     def folderCreationLogic(self):
         #first lets check if the project folder exists
         if os.path.isdir(self.createPath()):
-            print("Folder exists")
             #handle the usecase, when the folder already exists else:
             qm = QMessageBox(self)
             if self.GER:
@@ -256,37 +260,31 @@ class logicWindow(QMainWindow, Ui_mainWindow):
             else:
                 ret = qm.question(self, "Folder operation", "Do you want to add the missing folders/files?",
                                   qm.StandardButton.Yes | qm.StandardButton.No)
-            print(ret.value)
+            #print(ret.value)
             #if the project folder already exists ask the user what he wants to do
             if QMessageBox.StandardButton.Yes == ret:
                 #handle the yes case
                 self.createFolders()
-                print("clicked yes")
             else:
                 #handle the no case
-                #?? go back to page one??
                 self.stackedWidget.setCurrentIndex(0)
-                print("something else")
+
         elif os.path.isfile(self.createPath()):
-            print("File")
             qm = QMessageBox(self)
             ret = qm.question(self, "File with same name as Project folder exists already!", "Do you want to overwrite the existing file?",
                               qm.StandardButton.Yes | qm.StandardButton.No)
 
-            print(ret.value)
+            #print(ret.value)
             # if a file with the same name already exists ask the user what he wants to do
             if QMessageBox.StandardButton.Yes == ret:
                 # handle the yes case
                 os.remove(self.createPath())
                 self.createFolders()
-                print("clicked yes")
             else:
                 # handle the no case
                 self.stackedWidget.setCurrentIndex(0)
-                print("something else")
 
         else:
-            print("Folder doesnt exist")
             self.createFolders()
 
     def createFolders(self):
@@ -298,7 +296,7 @@ class logicWindow(QMainWindow, Ui_mainWindow):
             os.makedirs(path)
         for i in range(child_count):
             item = root.child(i)
-            print(f'Text: {item.text(0)} Checked: {item.checkState(0)}')
+            #print(f'Text: {item.text(0)} Checked: {item.checkState(0)}')
             if(item.checkState(0) == Qt.CheckState.Checked):
                 src = os.path.join(self.lineEdit_folder.text(), item.text(0))
                 if not os.path.exists(os.path.join(path, item.text(0))):
@@ -306,10 +304,8 @@ class logicWindow(QMainWindow, Ui_mainWindow):
                         crt = os.path.join(path, item.text(0))
                         os.makedirs(crt)
                         shutil.copytree(src, os.path.join(path, item.text(0)), dirs_exist_ok=True)
-                        print("copy dir")
                     else:
                         shutil.copy2(src, path)
-                        print("copy file")
                 else:
                     if os.path.isdir(src):
                         name.append(item.text(0))
@@ -335,7 +331,6 @@ class logicWindow(QMainWindow, Ui_mainWindow):
                     dst_file = os.path.join(dst_dir, file)
                     if not os.path.exists(dst_file):
                         shutil.copy2(src_file, dst_file)
-
 
 
     def createPath(self):

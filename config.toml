@@ -3,7 +3,8 @@ source = "D:\\structFolder"
 target = "D:\\structTest"
 
 [picture]
-logo = "C:\\Users\\Tom\\Desktop\\d74c9f7080b4d39e27371fbd4e6d9e6e.jpg"
+logos = "C:\\Users\\Tom\\Desktop\\d74c9f7080b4d39e27371fbd4e6d9e6e.jpg"
+logo = "C:\\Users\\Tom\\Desktop\\yoshi.png"
 background = "C:/Users/Tom/Desktop/d74c9f7080b4d39e27371fbd4e6d9e6e.jpg"
 
 #Value true for german language or false for english language
