@@ -45,7 +45,19 @@ The User clicked the "No" Button. The Program will go back to the first Page, so
 
 
 ## Config File
-TODO
+The config file is used to prefil the Program with Information.
+
+### Sourcepath
+The Path of the folder which should be used as baseline for the folder structure
+
+### Targetpath
+The Path to which the copy operation shoul
+
+## Logo
+Link to the Logo. The logo will be used on the Mainpage and on the Windowicon.
+
+## Language GER
+Setting to change between English and German language
 
 
 ## Motivation 
